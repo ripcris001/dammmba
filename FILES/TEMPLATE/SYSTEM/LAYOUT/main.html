@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+	<!-- BEGIN: Head-->
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta name="description" content="Materialize is a Material Design Admin Template,It's modern, responsive and based on Material Design by Google.">
+		<meta name="keywords" content="materialize, admin template, dashboard template, flat admin template, responsive admin template, eCommerce dashboard, analytic dashboard">
+		<meta name="author" content="ThemeSelect">
+		<title>{cTitle}</title>
+		<link rel="apple-touch-icon" href="{cAssets}/app-assets/images/favicon/apple-touch-icon-152x152.png">
+		<link rel="shortcut icon" type="image/x-icon" href="{cAssets}/app-assets/images/favicon/favicon-32x32.png">
+		<link href="{cAssets}/app-assets/custom/material-icon/icon.css" rel="stylesheet">
+		<!-- BEGIN: VENDOR CSS-->
+		<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/vendors/vendors.min.css">
+		<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/vendors/animate-css/animate.css">
+		<!-- END: VENDOR CSS-->
+		<!-- BEGIN: Page Level CSS-->
+		<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/css/themes/vertical-modern-menu-template/materialize.css">
+		<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/css/themes/vertical-modern-menu-template/style.css">
+		<!-- END: Page Level CSS-->
+		<!-- BEGIN: Custom CSS-->
+		{cPluginCSS}
+		<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/css/custom/custom.css">
+		<!-- END THEME  JS-->
+
+		<script src="{cAssets}/app-assets/js/vendors.min.js" type="text/javascript"></script>
+		<script src="{cAssets}/app-assets/js/plugins.js" type="text/javascript"></script>
+		<script src="{cAssets}/app-assets/js/custom/custom-script.js" type="text/javascript"></script>
+		<script src="{cAssets}/app-assets/js/scripts/customizer.js" type="text/javascript"></script>
+		<script src="{cAssetsCC}/custom.js" ></script>
+		{cPluginJS}
+	</head>
+  <!-- END: Head-->
+	<body class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu 2-columns  " data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
+		<!-- BEGIN: Header-->
+		<header class="page-topbar" id="header">
+			{cHeader}
+		</header>
+		{cSidebar}
+		<div id="main" class="{theme_menu_collapsed_main}">
+			<div class="row">
+				<div class="content-wrapper-before {theme_navebar_color_content}"></div>
+		        <div class="col s12">
+		        	<div class="container">
+		        		{cRoleButton}
+						{cContent}
+					</div>
+				</div>
+				<span class="theme-button-container"></span>
+				{cChat}
+				<div id="theme-cutomizer-out" class="theme-cutomizer sidenav row">
+					{cThemer}
+				</div>
+			
+			</div>
+		</div>
+		{cFooter}
+		<script type="text/javascript">
+			$(document).ready(function(){
+				const activeMenuColor = "{theme_menu_color}";
+				const menuColorGradient = parseInt("{theme_menu_color_gradient}");
+				const enableTheme = parseInt("{cAllowTheme}");
+				if(enableTheme){
+					$('.theme-button-container').html( `<a
+				      href="#"
+				      data-target="theme-cutomizer-out"
+				      class="btn btn-customizer pink accent-2 white-text sidenav-trigger theme-cutomizer-trigger"
+				      ><i class="material-icons">settings</i></a
+				   >`);
+				}
+				$('.btn-logout').on('click', async function(){
+					const logout = await request.post({url: '/api/logout', body:{}});
+					if(logout && logout.status){
+						system.redirect('/');
+					}else{
+						toaster.error(logout.message);
+					}
+				})
+				$('.btn-logout-gateway').on('click', async function(){
+					const logout = await request.post({url: '/api/logoutGateway', body:{}});
+					if(logout && logout.status){
+						system.urlReload();
+					}
+				})
+				$('.sidebar-data').each(function(i,v){
+					const that = $(v);
+					const data = that.data("dropdown");
+					const link = that.attr('href');
+					const url = window.location.pathname;
+					if(data){
+						if(link === url){
+							if(menuColorGradient){
+								that.addClass(`active ${activeMenuColor}`)
+							}else{
+								that.addClass(`active ${activeMenuColor}`).attr("style","display: block; background: none; box-shadow: none;")
+							}
+							that.closest(".parent-dropdown").addClass("active open").find('.collapsible-body').attr("style","display: block;");
+						}
+					}else{
+						if(link === url){
+							if(menuColorGradient){
+								that.addClass(`active ${activeMenuColor}`)
+							}else{
+								that.addClass(`active ${activeMenuColor}`).attr("style","display: block; background: none; box-shadow: none;")
+							}
+						}
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

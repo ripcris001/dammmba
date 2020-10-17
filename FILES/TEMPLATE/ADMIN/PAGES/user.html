@@ -1,0 +1,41 @@
+<div class="plugin-list">
+	
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		const data = {data_user};
+		const set = {
+			plugin : data,
+			loadPlugin: function(){
+				let html = `
+					<table>
+						</tr>
+							<td> user_id </td>
+							<td> username </td>
+							<td> name </td>
+							<td> email </td>
+							<td> user_role </td>
+							<td> last_login </td>
+						</tr>`;
+				if(this.plugin && this.plugin.length){
+					const count = this.plugin.length;
+					for(let a = 0; a < count; a++){
+						html += `<tr>
+						<td>${this.plugin[a]['user_id']}</td>
+						<td>${this.plugin[a]['username']}</td>
+						<td>${this.plugin[a]['name']}</td>
+						<td>${this.plugin[a]['email']}</td>
+						<td>${this.plugin[a]['user_role']}</td>
+						<td>${this.plugin[a]['last_login']}</td></tr>
+						`;
+					}
+					html+= '</table>'
+				}else{
+					html = "No plugin";
+				}
+				$('.plugin-list').html(html);
+			}
+		}
+		set.loadPlugin();
+	})
+</script>

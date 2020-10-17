@@ -1,0 +1,49 @@
+<div class="plugin-list">
+	
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		const data = {data_routes};
+		const set = {
+			plugin : data,
+			loadPlugin: function(){
+				let html = `
+					<table>
+						</tr>
+							<td> route </td>
+							<td> file_name </td>
+							<td> function </td>
+							<td> maintenance </td>
+							<td> require_login </td>
+							<td> is_backend </td>
+							<td> require_user_role </td>
+							<td> allow_user_role </td>
+							<td> allow_user_maintenance </td>
+						</tr>`;
+				if(this.plugin && this.plugin.length){
+					const count = this.plugin.length;
+					for(let a = 0; a < count; a++){
+						html += `
+						<tr>
+							<td>${this.plugin[a]['route']}</td>
+							<td>${this.plugin[a]['file_name']}</td>
+							<td>${this.plugin[a]['function']}</td>
+							<td>${this.plugin[a]['maintenance']}</td>
+							<td>${this.plugin[a]['require_login']}</td>
+							<td>${this.plugin[a]['is_backend']}</td>
+							<td>${this.plugin[a]['require_user_role']}</td>
+							<td>${this.plugin[a]['allow_user_role']}</td>
+							<td>${this.plugin[a]['allow_user_maintenance']}</td>
+						</tr>
+						`;
+					}
+					html+= '</table>'
+				}else{
+					html = "No plugin";
+				}
+				$('.plugin-list').html(html);
+			}
+		}
+		set.loadPlugin();
+	})
+</script>

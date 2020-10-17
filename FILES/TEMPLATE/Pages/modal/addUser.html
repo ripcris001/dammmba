@@ -1,0 +1,176 @@
+<!-- Modal Structure -->
+<div id="addUserModal" class="modal override-modal">
+  <form class="formValidate" id="addUserForm">
+  <div class="modal-content">
+    <h4>Add User</h4>
+      <div class="row">
+        <div class="input-field col s6">
+          <label for="uname">Username *</label>
+          <input class="input-data" id="uname" name="username" type="text" data-error=".error-username">
+          <div class="error-username"></div>
+        </div>
+        <div class="input-field col s6">
+          <label for="cemail">E-Mail *</label>
+          <input class="input-data" id="cemail" type="email" name="email" data-error=".error-email">
+          <div class="error-email"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="cname">Name</label>
+          <input class="input-data" id="cname" type="text" name="name" data-error=".error-name">
+          <div class="error-name"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="password">Password *</label>
+          <input class="input-data" id="password" type="password" name="password" data-error=".error-password">
+          <div class="error-password"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="cpassword">Confirm Password *</label>
+          <input class="input-data" id="cpassword" type="password" name="cpassword" data-error=".error-cpassword">
+          <div class="error-cpassword"></div>
+        </div>
+        <div class="col s12">
+          <label for="crole">Role *</label>
+          <select class="error browser-default input-data" id="crole" name="role" data-error=".error-role">
+            <option disabled selected>Choose your profile</option>
+            <option value="1">Admin</option>
+            <option value="20">Member</option>
+          </select>
+          <div class="input-field">
+            <div class="error-role"></div>
+          </div>
+        </div>
+        <div class="col s12">
+          <label for="crole">Branch *</label>
+          <select class="error browser-default input-data" id="cbranch" name="branch_id" data-error=".error-branch">
+            <option disabled selected>Choose your branch</option>
+            <option value="1">DBM-Bacolod</option>
+            <option value="2">DBM-Sagay</option>
+          </select>
+          <div class="input-field">
+            <div class="error-branch"></div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button class="waves-effect waves-green btn-flat" type="reset">Reset</button>
+    <button class="waves-effect waves-green btn-flat" type="submit">Submit</button>
+  </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const branch_list = {data_branch_list};
+    const role_list = {data_role_list};
+    const inputForm = $('#addUserForm');
+    const modalClass = $('#addUserModal.modal');
+    const modalInit = modalClass.modal({
+      dismissible: true,
+      onCloseEnd: function(){
+        inputForm.find('button[type="reset"]').click();
+      }
+    });
+    inputForm.validate({
+      rules: {
+        username: {
+            required: true,
+            minlength: 5
+        },
+        name: {
+            required: true,
+            minlength: 5
+        },
+        email: {
+            required: true,
+            minlength: 5
+        },
+        password: {
+            required: true,
+            minlength: 5
+        },
+        cpassword:{
+          required: true,
+          minlength: 5,
+          equalTo: "#password"
+        },
+        role: {
+            required: true
+        },
+        branch_id:{
+            required: true
+        },
+      },
+      messages: {
+        username:{
+          required: "Enter a username",
+          minlength: "Enter at least 5 characters"
+        },
+        email:{
+          required: "Enter an email",
+          minlength: "Enter at least 5 characters"
+        },
+        name:{
+          required: "Enter a name",
+          minlength: "Enter at least 5 characters"
+        },
+        password:{
+          required: "Enter a password",
+          minlength: "Enter at least 5 characters"
+        },
+        cpassword:{
+          required: "Re-type password",
+          minlength: "Enter at least 5 characters",
+          equalTo: "Password doesnt match!"
+        },
+        role: {
+            required: "Select a role",
+        },
+        branch_id: {
+            required: "Select branch",
+        }
+      },
+      errorClass: "invalid",
+      errorPlacement: function(error, element) {
+        var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error);
+          } else {
+            error.insertAfter(element);
+          }
+      },
+      submitHandler:  function(){
+        localData = async function (data){
+          const query = await request.post({url: '/api/admin/addUser', body:data});
+          if(query && query.status){
+            toaster.success(query.message);
+            setTimeout(function(){
+              modalClass.modal('close');
+            }, 1500);
+          }else{
+            toaster.error(query.message);
+          }
+        }
+        const input = {};
+        inputForm.find('.input-data').each(function(){
+          const local = $(this);
+          const name = local.attr('name');
+          const value = local.val();
+          if(name){
+            if(name !== 'cpassword'){
+              input[name] = value;
+            }
+            
+          }
+        });
+        if(input && Object.keys(input).length){
+          localData(input);
+        }
+      }
+    })
+    const selectBranchOption = loadSelect(branch_list, 'id:name', 'Choose Branch');
+    const selectRoleOption = loadSelect(role_list, 'id:name', 'Choose Role');
+    $('select#crole').html(selectRoleOption);
+    $('select#cbranch').html(selectBranchOption);
+  })
+</script>

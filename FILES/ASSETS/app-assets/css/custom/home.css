@@ -1,0 +1,187 @@
+/*----------------------------------------
+    Page FAQ
+------------------------------------------*/
+#dashboard_home .home-search-image
+{
+    background-image: url('../../images/gallery/faq-search.jpg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+            background-size: cover;
+}
+.home-page-title{
+    font-size: 50px;
+    font-weight: bold;
+    padding: 15px 0px;
+}
+.home-page-sub-title{
+    font-size: 25px;
+    font-style: italic;
+}
+#dashboard_home .search-shadow
+{
+    width: 95%;
+    padding-left: 1rem; 
+
+    border-radius: 3rem;
+    -webkit-box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -7px rgba(0, 0, 0, .2);
+            box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -7px rgba(0, 0, 0, .2);
+}
+
+#dashboard_home .home-card :hover i
+{
+    padding-left: .5rem;
+
+    -webkit-transition: .3s ease-in-out;
+       -moz-transition: .3s ease-in-out;
+         -o-transition: .3s ease-in-out;
+            transition: .3s ease-in-out; 
+
+    text-shadow: 2px 2px 6px #b0bec5;
+}
+
+#dashboard_home .home-card i
+{
+    font-size: 3rem;
+
+    -webkit-transition: .3s ease-in-out;
+       -moz-transition: .3s ease-in-out;
+         -o-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+}
+
+#dashboard_home img,
+#dashboard_home-detail img
+{
+    width: 40px;
+}
+
+#dashboard_home .p-35,
+#dashboard_home-detail .p-35
+{
+    padding: 35px;
+}
+
+#dashboard_home .card-content .category-list p,
+#dashboard_home-detail .card-content .category-list p
+{
+    -webkit-transition: .3s ease-in-out;
+       -moz-transition: .3s ease-in-out;
+         -o-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+}
+#dashboard_home .card-content .category-list p:hover,
+#dashboard_home-detail .card-content .category-list p:hover
+{
+    padding-left: .3rem;
+
+    cursor: pointer; 
+    -webkit-transition: .3s ease-in-out;
+       -moz-transition: .3s ease-in-out;
+         -o-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+}
+
+#dashboard_home .categories-collapsible,
+#dashboard_home-detail .categories-collapsible
+{
+    border: none; 
+    -webkit-box-shadow: none;
+            box-shadow: none;
+}
+#dashboard_home .categories-collapsible li.active,
+#dashboard_home-detail .categories-collapsible li.active
+{
+    margin-bottom: .8rem; 
+
+    border-bottom: 1px solid #eceff1;
+}
+#dashboard_home .categories-collapsible li.active i,
+#dashboard_home-detail .categories-collapsible li.active i
+{
+    -webkit-transform: rotate(90deg);
+       -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+         -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+}
+#dashboard_home .categories-collapsible .collapsible-header,
+#dashboard_home-detail .categories-collapsible .collapsible-header
+{
+    margin-bottom: .5rem;
+
+    border: none;
+    -webkit-box-shadow: 0 0 3px 0 #00017;
+            box-shadow: 0 0 3px 0 #00017;
+}
+#dashboard_home .categories-collapsible .collapsible-header i,
+#dashboard_home-detail .categories-collapsible .collapsible-header i
+{
+    position: absolute;
+    right: 2rem;
+
+    -webkit-transition: all .3s;
+       -moz-transition: all .3s;
+         -o-transition: all .3s;
+            transition: all .3s;
+}
+
+#dashboard_home .collapsible-body,
+#dashboard_home-detail .collapsible-body
+{
+    padding: 0;
+    padding-top: 5px;
+    padding-right: 1rem;
+    padding-left: 1rem;
+
+    border: 0;
+}
+#dashboard_home .collapsible-body p,
+#dashboard_home-detail .collapsible-body p
+{
+    font-size: .9rem; 
+
+    margin-top: 5px;
+
+    cursor: pointer;
+}
+
+/*----------------------------------------
+    Page FAQ Detials
+------------------------------------------*/
+#dashboard_home-detail .home-search-image
+{
+    background-image: url('../../images/gallery/faq-search.jpg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+            background-size: cover;
+}
+
+#dashboard_home-detail .search-shadow
+{
+    width: 95%;
+    padding-left: 1rem; 
+
+    border-radius: 3rem;
+    -webkit-box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -7px rgba(0, 0, 0, .2);
+            box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -7px rgba(0, 0, 0, .2);
+}
+
+#dashboard_home-detail i
+{
+    font-size: 1.2rem;
+
+    margin-right: .5rem;
+}
+
+#dashboard_home-detail .card-content .text-sm
+{
+    font-size: .8rem;
+
+    color: #bdbdbd;
+}
+
+#dashboard_home-detail .card-content .card-title
+{
+    margin-bottom: 1rem; 
+    padding-bottom: .5rem;
+}

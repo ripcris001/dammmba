@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col s12 m12 l12">
+    <div id="basic-tabs" class="card card card-default scrollspy">
+      <div class="card-content pt-5 pr-5 pb-5 pl-5">
+        <h3 class="card-title table-header">Landholding List <span>{data_addButton}</span></h3>
+        
+        <table id="landholding-table" class="display responsive-table"></table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const cEdit = {data_edit};
+    const tableData = {data_landholding};
+    const dataObject = {
+      table : $('#landholding-table'),
+      config: {
+        "responsive": true,
+        "responsive": true,
+        scrollY: '100%',
+        "paging": false,
+        "ordering": true,
+        "info": false,
+        "filter":false,
+        "columns": [],
+        "data": [],
+        "language": {
+          "emptyTable": "No data available in table"
+        }
+      },
+      render: function(){
+        if(cEdit){
+          this.config.columns.push({data: 'action', title: 'Option'});
+        }
+        this.datatable = this.table.DataTable(this.config);
+        this.setEvent();
+      },
+      setData: function(data){
+        if(data && data.length){
+          this.config.data = data;
+        }else{
+          this.config.data = [];
+        }
+        return this;
+      },
+      setColumn: function(data){
+        if(data && data.length){
+          this.config.columns = data;
+        }else{
+          this.config.columns = [];
+        }
+        return this;
+      },
+      setEvent : function(){
+        const that = this;
+        this.table.find('tbody').on('click', 'tr', function(){
+          const rowData = that.datatable.row( this ).data();
+          console.log(rowData);
+          window.location.href = `/landholding?landholdings=${rowData.code}`;
+        })
+        this.table.find('tbody').on('click', '.btn-extra-edit', function(e){
+          e.stopPropagation();
+          const data = $(this).data('extra-param');
+        })
+      }
+    }
+    dataObject.setColumn([
+      {data: 'landholdings_name', title:'Landholding'},
+      {data: 'municipality', title:'Municipality'},
+      {data: 'barangay', title:'Barangay'},
+      {data: 'landowner_name', title:'Owner'},
+      {data: 'title_number', title:'Title Number'},
+      {data: 'lot_number', title:'Lot Number'},
+      {data: 'lot_area', title:'Lot Area'}
+    ]).setData(tableData).render();
+    
+    $('.table-header .btn-extra-add').on('click', function(){
+      $('#addLHModal').modal('open');
+    })
+  })
+</script>
+{data_addLandholdingModal}
+

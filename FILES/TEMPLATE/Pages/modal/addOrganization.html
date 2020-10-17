@@ -1,0 +1,186 @@
+<!-- Modal Structure -->
+<div id="addOrgModal" class="modal override-modal">
+  <form class="formValidate" id="addOrgForm">
+  <div class="modal-content">
+    <h4>Add Organization</h4>
+      <div class="row">
+        <div class="input-field col s9">
+          <label for="uorganization_name">Organization Name *</label>
+          <input class="input-data" id="uorganization_name" name="organization_name" type="text" data-error=".error-organization_name">
+          <div class="error-organization_name"></div>
+        </div>
+        <div class="input-field col s3">
+          <label for="cacroname">Acroname *</label>
+          <input class="input-data" id="cacroname" type="text" name="acroname" data-error=".error-acroname">
+          <div class="error-acroname"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="caddress">Address *</label>
+          <input class="input-data" id="caddress" type="text" name="address" data-error=".error-address">
+          <div class="error-address"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="cmunicipality">Municipality</label>
+          <input class="input-data" id="cmunicipality" type="text" name="municipality" data-error=".error-municipality">
+          <div class="error-municipality"></div>
+        </div>
+        <div class="col s12">
+          <label for="clandholdings_id">landholdings *</label>
+          <select class="error browser-default input-data" id="clandholdings_id" name="landholdings_id" data-error=".error-landholdings_id">
+            <option disabled selected>Choose Option</option>
+          </select>
+          <div class="input-field">
+            <div class="error-landholdings_id"></div>
+          </div>
+        </div>
+        <div class="input-field col s4">
+          <label for="cregistration_number">Registration Number *</label>
+          <input class="input-data" id="cregistration_number" type="text" name="registration_number" data-error=".error-registration_number">
+          <div class="error-registration_number"></div>
+        </div>
+        <div class="input-field col s4">
+          <label for="cregistration_agency">Registration Agency *</label>
+          <input class="input-data" id="cregistration_agency" type="text" name="registration_agency" data-error=".error-registration_agency">
+          <div class="error-registration_agency"></div>
+        </div>
+        <div class="input-field col s4">
+          <label for="caccridited_number">Accridited Number *</label>
+          <input class="input-data" id="caccridited_number" type="text" name="accridited_number" data-error=".error-accridited_number">
+          <div class="error-accridited_number"></div>
+        </div>
+        <div class="col s4">
+          <label for="cdate_registered">Date Registered *</label>
+          <input class="datepicker input-data" type="date" id="cdate_registered" name="date_registered" data-error=".error-date_registered">
+          <div class="error-date_registered"></div>
+        </div>
+        <div class="col s4">
+          <label for="cdate_accridited">Date Accridited *</label>
+          <input class="datepicker input-data" id="cdate_accridited" type="date" name="date_accridited" data-error=".error-date_accridited">
+          <div class="error-date_accridited"></div>
+        </div>
+        <div class="col s4">
+          <label for="cfor_registration">For Registration *</label>
+          <select class="error browser-default input-data" id="cfor_registration" name="for_registration" data-error=".error-for_registration">
+            <option disabled selected>Choose Option</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+          <div class="input-field">
+            <div class="error-for_registration"></div>
+          </div>
+        </div>
+
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button class="waves-effect waves-green btn-flat" type="reset">Reset</button>
+    <button class="waves-effect waves-green btn-flat" type="submit">Submit</button>
+  </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const lhlist = {data_lh_list};
+    const inputForm = $('#addOrgForm');
+    const modalClass = $('#addOrgModal.modal');
+    const modalInit = modalClass.modal({
+      dismissible: true,
+      onCloseEnd: function(){
+        inputForm.find('button[type="reset"]').click();
+      }
+    });
+    inputForm.validate({
+      rules: {
+        landholdings_id: {
+            required: true
+        },
+        organization_name: {
+            required: true
+        },
+        municipality: {
+            required: true
+        },
+        address: {
+            required: true
+        },
+        registration_number:{
+          required: true
+        },
+        registration_agency: {
+            required: true
+        },
+        date_registered:{
+            required: true
+        },
+        for_registration:{
+            required: true
+        },
+      },
+      messages: {
+        landholdings_id:{
+          required: "Select Landholdings"
+        },
+        organization_name:{
+          required: "Enter Organization"
+        },
+        municipality:{
+          required: "Enter a password"
+        },
+        address:{
+          required: "Re-type password"
+        },
+        registration_number: {
+            required: "Select a role",
+        },
+        registration_agency: {
+            required: "Select branch",
+        },
+        date_registered: {
+            required: "Select branch",
+        },
+        for_registration: {
+            required: "Verify if For Registration",
+        }
+      },
+      errorClass: "invalid",
+      errorPlacement: function(error, element) {
+        var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error);
+          } else {
+            error.insertAfter(element);
+          }
+      },
+      submitHandler:  function(){
+        localData = async function (data){
+          const query = await request.post({url: '/api/organization/addOrg', body:data});
+          if(query && query.status){
+            toaster.success(query.message);
+            setTimeout(function(){
+              modalClass.modal('close');
+            }, 1500);
+          }else{
+            toaster.error(query.message);
+          }
+        }
+        const input = {};
+        inputForm.find('.input-data').each(function(){
+          const local = $(this);addOrgModal
+          const name = local.attr('name');
+          const value = local.val();
+          if(name){
+            if(name !== 'cpassword'){
+              input[name] = value;
+            }
+          }
+        });
+        if(input && Object.keys(input).length){
+          localData(input);
+          console.log(input);
+        }
+      }
+    })
+    const selectOption = loadSelect(lhlist, 'id:name', 'Choose Option');
+    $('select#clandholdings_id').html(selectOption);
+  })
+</script>

@@ -1,0 +1,146 @@
+<!-- Modal Structure -->
+<div id="addLHModal" class="modal">
+  <form class="formValidate" id="addLHForm">
+  <div class="modal-content">
+    <h4>Add Landholdings</h4>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="ulandholdings_name">Landholdings Name *</label>
+          <input class="input-data" id="ulandholdings_name" name="landholdings_name" type="text" data-error=".error-landholdings_name">
+          <div class="error-landholdings_name"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="clandowner_name">Land Owner Name *</label>
+          <input class="input-data" id="clandowner_name" type="text" name="landowner_name" data-error=".error-landowner_name">
+          <div class="error-landowner_name"></div>
+        </div>
+        <div class="input-field col s6">
+          <label for="cmunicipality">Municipality</label>
+          <input class="input-data" id="cmunicipality" type="text" name="municipality" data-error=".error-municipality">
+          <div class="error-municipality"></div>
+        </div>
+        <div class="input-field col s6">
+          <label for="cbarangay">Barangay *</label>
+          <input class="input-data" id="cbarangay" type="text" name="barangay" data-error=".error-barangay">
+          <div class="error-barangay"></div>
+        </div>
+        <div class="input-field col s4">
+          <label for="ctitle_number">Title Number *</label>
+          <input class="input-data" id="ctitle_number" type="text" name="title_number" data-error=".error-title_number">
+          <div class="error-title_number"></div>
+        </div>
+        <div class="input-field col s4">
+          <label for="clot_number">Lot Number *</label>
+          <input class="input-data" id="clot_number" type="text" name="lot_number" data-error=".error-lot_number">
+          <div class="error-lot_number"></div>
+        </div>
+        <div class="input-field col s4">
+          <label for="clot_area">Lot Area *</label>
+          <input class="input-data" id="clot_area" type="text" name="lot_area" data-error=".error-lot_area">
+          <div class="error-lot_area"></div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button class="waves-effect waves-green btn-flat" type="reset">Reset</button>
+    <button class="waves-effect waves-green btn-flat" type="submit">Submit</button>
+  </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const inputForm = $('#addLHForm');
+    const modalClass = $('#addLHModal.modal');
+    const modalInit = modalClass.modal({
+      dismissible: true,
+      onCloseEnd: function(){
+        inputForm.find('button[type="reset"]').click();
+      }
+    });
+    inputForm.validate({
+      rules: {
+        landholdings_name: {
+            required: true
+        },
+        landowner_name: {
+            required: true
+        },
+        municipality: {
+            required: true
+        },
+        barangay: {
+            required: true
+        },
+        title_number:{
+          required: true
+        },
+        lot_number: {
+            required: true
+        },
+        lot_area:{
+            required: true
+        },
+      },
+      messages: {
+        landholdings_name:{
+          required: "Enter a username"
+        },
+        landowner_name:{
+          required: "Enter an email"
+        },
+        municipality:{
+          required: "Enter a name"
+        },
+        barangay:{
+          required: "Enter a password"
+        },
+        title_number:{
+          required: "Re-type password"
+        },
+        lot_number: {
+            required: "Select a role",
+        },
+        lot_area: {
+            required: "Select branch",
+        }
+      },
+      errorClass: "invalid",
+      errorPlacement: function(error, element) {
+        var placement = $(element).data('error');
+          if (placement) {
+            $(placement).append(error);
+          } else {
+            error.insertAfter(element);
+          }
+      },
+      submitHandler:  function(){
+        localData = async function (data){
+          const query = await request.post({url: '/api/landholding/addlh', body:data});
+          if(query && query.status){
+            toaster.success(query.message);
+            setTimeout(function(){
+              modalClass.modal('close');
+            }, 1500);
+          }else{
+            toaster.error(query.message);
+          }
+        }
+        const input = {};
+        inputForm.find('.input-data').each(function(){
+          const local = $(this);
+          const name = local.attr('name');
+          const value = local.val();
+          if(name){
+            if(name !== 'cpassword'){
+              input[name] = value;
+            }
+          }
+        });
+        if(input && Object.keys(input).length){
+          localData(input);
+          //console.log(input);
+        }
+      }
+    })
+  })
+</script>

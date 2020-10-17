@@ -1,0 +1,30 @@
+/*================================================================================
+	Item Name: Materialize - Material Design Admin Template
+	Version: 5.0
+	Author: PIXINVENT
+	Author URL: https://themeforest.net/user/pixinvent/portfolio
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN CSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+.home-bg{
+	background-image: url(../../images/gallery/flat-bg.jpg);
+	background-position: center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.login-bg{
+    background-image: url(../../images/gallery/flat-bg.jpg);
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.override-modal{
+	max-height: 95% !important;
+	top: 3% !important;
+}

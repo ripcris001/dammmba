@@ -1,0 +1,121 @@
+<link rel="stylesheet" type="text/css" href="{cAssets}/app-assets/css/pages/login.css">
+    <div class="row">
+      <div class="col s12">
+        <div class="container"><div id="login-page" class="row">
+		  <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 login-card bg-opacity-8">
+			<form class="login-form" id="login-form-validation">
+			  <div class="row">
+				<div class="input-field col s12">
+				  <h5 class="ml-4">Sign in</h5>
+				</div>
+			  </div>
+			  <div class="row margin">
+				<div class="input-field col s12">
+				  <i class="material-icons prefix pt-2">person_outline</i>
+				  <input class="input-field" id="username" name="username" type="text" data-error=".errorUsername">
+				  <label for="username" class="center-align">Username</label>
+				  <div class="errorUsername"></div>
+				</div>
+			  </div>
+			  <div class="row margin">
+				<div class="input-field col s12">
+				  <i class="material-icons prefix pt-2">lock_outline</i>
+				  <input class="input-field" id="password" name="password" type="password" data-error=".errorPassword">
+				  <label for="password">Password</label>
+				  <div class="errorPassword"></div>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="col s12 m12 l12 ml-2 mt-1">
+				  <p>
+					<label>
+					  <input type="checkbox" />
+					  <span>Remember Me</span>
+					</label>
+				  </p>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s12">
+				  <button class="btn-login btn waves-effect waves-light border-round gradient-45deg-purple-deep-orange col s12" type="submit">Login</button>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s6 m6 l6">
+				  <p class="margin medium-small">{session_change_gateway}</p>
+				</div>
+				<div class="input-field col s6 m6 l6">
+				  <p class="margin right-align medium-small"><a href="user-forgot-password.html">Forgot password ?</a></p>
+				</div>
+			  </div>
+			</form>
+		  </div>
+		</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEGIN VENDOR JS-->
+   <script src="{cAssets}/app-assets/js/vendors.min.js" type="text/javascript"></script>
+    <script src="{cAssets}/app-assets/js/plugins.js" type="text/javascript"></script>
+    <script src="{cAssets}/app-assets/js/custom/custom-script.js" type="text/javascript"></script>
+    <script src="{cAssets}/app-assets/vendors/jquery-validation/jquery.validate.min.js"></script>
+    <script src="{cAssets}/app-assets/js/scripts/advance-ui-toasts.js" type="text/javascript"></script>
+    <script src="{cAssetsCC}/custom.js" ></script>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		$('.btn-logout-gateway').on('click', async function(){
+				const logout = await request.post({url: '/api/apiLogoutGateway', body:{}});
+				if(logout && logout.status){
+					system.urlReload();
+				}
+			})
+    		$("#login-form-validation").validate({
+			    rules: {
+				    username: {
+				        required: true,
+				        minlength: 5
+				    },
+				    password: {
+				        required: true,
+				        minlength: 5
+				    }
+			    },
+			    messages: {
+				    username:{
+				    	required: "Enter a username",
+				    	minlength: "Enter at least 5 characters"
+				    }
+			    },
+			    errorClass: "invalid",
+			    errorPlacement: function(error, element) {
+			    	var placement = $(element).data('error');
+			        if (placement) {
+			        	$(placement).append(error);
+			        } else {
+			      		error.insertAfter(element);
+			      	}
+			    },
+			    submitHandler:  function(){
+			    	const validate = async function(){
+			    		const data = {};
+				    	$("#login-form-validation").find(".input-field").each(function(){
+				    		const self = $(this);
+				    		const name = self.attr("name");
+				    		const value = self.val();
+				    		if(name){
+				    			data[name] = value;
+				    		}
+				    	})
+				    	const response = await request.post({url: '/api/login', body:data});
+				    	if(response && response.status){
+				    		system.redirect('/');
+				    	}else{
+				    		toaster.error(response.message);
+				    	}
+			    	}
+			    	validate();
+			    }
+			});
+    	})
+    </script>

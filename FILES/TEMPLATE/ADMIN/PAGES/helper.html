@@ -1,0 +1,24 @@
+<div class="plugin-list">
+	
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		const data = JSON.parse('{data_plugin}');
+		const set = {
+			plugin : data,
+			loadPlugin: function(){
+				let html = "";
+				if(this.plugin && this.plugin.length){
+					const count = this.plugin.length;
+					for(let a = 0; a < count; a++){
+						html += `<span>${this.plugin[a]}</span><br />`;
+					}
+				}else{
+					html = "No plugin";
+				}
+				$('.plugin-list').html(html);
+			}
+		}
+		set.loadPlugin();
+	})
+</script>
