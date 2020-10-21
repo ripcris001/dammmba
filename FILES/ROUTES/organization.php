@@ -4,11 +4,34 @@
 			$that = $this;
 			$this->templateSetter($this->checkSession());
 			if(isset($param->params['organization'])){
-				$getOrg = $this->getOrganization($this->decrypt($param->params['organization']));
+				$orgIdDec = $this->decrypt($param->params['organization']);
+				$getOrg = $this->getOrganization($orgIdDec);
 				if($getOrg->status){
 					foreach ($getOrg->data as $key => $value) {
 						$this->__data->$key = $value;
 					}
+					$input = $this->newClass();
+					$input->query = "SELECT * FROM organization_member WHERE organization_id = {id}";
+					$input->query = $this->queryParser($input->query, array('{id}' => $orgIdDec));
+					$query = $this->execQuery("fetch",$input->query, true);
+					if($query->status){
+						// additional plugin when user has write role
+						if(isset($param->role->write) && $param->role->write){
+							array_push($this->__plugin->use, 'jquery_validation');
+						}
+						$tempData = array();
+						foreach ($query->data as $key => $value) {
+							$loopData = $value;
+							$loopData["position"] = $that->getMemberPosition($loopData["position"])->data->position_name;
+							$loopData["code"] = $that->encrypt($loopData['id']);
+							$loopData["action"] = $this->genButton(false, $param->role->write, $param->role->delete, $loopData["code"]);
+							array_push($tempData, $loopData);
+						}
+						$this->__data->organization_member = $tempData;
+					}else{
+						$this->__data->organization_member = array();
+					}
+					$this->__plugin->use = array('data_tables');
 					$this->__template->cContent = $this->loadTemplate("/TEMPLATE/Pages/organization/details.html");
 				}else{
 					$this->__template->cContent = $this->loadTemplate("/TEMPLATE/SYSTEM/COMPONENT/ERROR/404.html");
@@ -72,7 +95,7 @@
 				$this->__template->cContent = $this->loadTemplate("/TEMPLATE/Pages/organization/member.html");
 				$this->__data->edit = $param->role->write ? 1 : 0;
 				$this->__data->addButton = $this->genButton($param->role->write, false, false);
-				$this->__data->addOrgModal = isset($param->role->write) && $param->role->write ? $this->loadTemplate("/TEMPLATE/Pages/modal/addOrganization.html") : "";
+				$this->__data->addOrgMemberModal = isset($param->role->write) && $param->role->write ? $this->loadTemplate("/TEMPLATE/Pages/modal/addOrganizationMember.html") : "";
 				$input = $this->newClass();
 				$input->query = "SELECT * FROM organization_member";
 				$query = $this->execQuery("fetch",$input->query, 1);
@@ -92,6 +115,25 @@
 						$loopData['id'] = null;
 						array_push($tempData, $loopData);
 					}
+					$tempDataPosition = array();
+					foreach ($this->getMemberPosition(true, true)->data as $key => $value) {
+						$loopData = $value;
+						$loopData["code"] = $that->encrypt($loopData['position_id']);
+						$loopData["name"] = $loopData['position_name'];
+						$loopData["action"] = $this->genButton(false, $param->role->write, $param->role->delete, $loopData["code"]);
+						$loopData['position_id'] = null;
+						array_push($tempDataPosition, $loopData);
+					}
+					$tempDataOrg = array();
+					foreach ($this->getOrganization(true, true)->data as $key => $value) {
+						$loopData = $value;
+						$loopData["code"] = $that->encrypt($loopData['id']);
+						$loopData["name"] = $loopData['organization_name'];
+						$loopData['id'] = null;
+						array_push($tempDataOrg, $loopData);
+					}
+					$this->__data->organization_list = $tempDataOrg;
+					$this->__data->position_list = $tempDataPosition;
 					$this->__data->organization_member = $tempData;
 				}else{
 					$this->__data->organization_member = array();
@@ -133,6 +175,33 @@
 						$response->message = "Failed to add new landholding.";
 					}
 				}
+			}else{
+				$response->message = "Please input data.";
+			}
+			$this->response($response);
+		}
+		public function _api_add_member($param){
+			$response = $this->newClass();
+			$response->status = false;
+			$response->message = "";
+			$input = $this->newClass();
+			if(isset($param->body)){
+				foreach ($param->body as $key => $value) {
+					$input->$key = $value;
+				}
+				$input->position = $this->decrypt($input->position);
+				$input->organization_id = $this->decrypt($input->organization_id);				
+				// $input->query = "INSERT INTO organization (landholdings_id, organization_name, acroname, municipality, address, registration_number, registration_agency, date_registered, accridited_number, date_accridited, for_registration) VALUES ('$input->landholdings_id','$input->organization_name','$input->acroname','$input->municipality','$input->address','$input->registration_number','$input->registration_agency','$input->date_registered','$input->accridited_number','$input->date_accridited','$input->for_registration')";
+
+				$input->query = "INSERT INTO organization_member (organization_id, member_name, gender, position, address) VALUES ('?','?','?','?','?')";
+				$query = $this->execQuery("insert", $input->query, array('issis', $input->organization_id, $input->member_name, $input->gender, $input->position, $input->address));
+				if($query->status){
+					$response->status = true;
+					$response->message = "Successfully added new landholding.";
+				}else{
+					$response->message = "Failed to add new landholding.";
+				}
+				$response->q = $query;
 			}else{
 				$response->message = "Please input data.";
 			}
