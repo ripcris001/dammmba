@@ -299,6 +299,12 @@
 	    		case 1:
 	    			$sidebar = '/TEMPLATE/SYSTEM/COMPONENT/SIDEBAR/sidebar_admin.html';
 	    		break;
+	    		case 20:
+	    			$sidebar = '/TEMPLATE/SYSTEM/COMPONENT/SIDEBAR/sidebar_member.html';
+	    		break;
+	    		case 21:
+	    			$sidebar = '/TEMPLATE/SYSTEM/COMPONENT/SIDEBAR/sidebar_manila_admin.html';
+	    		break;
 	    	}
 	    	return $sidebar;
 	    }

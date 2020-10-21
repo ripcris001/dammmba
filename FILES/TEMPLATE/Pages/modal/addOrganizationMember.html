@@ -1,0 +1,155 @@
+<!-- Modal Structure -->
+<div id="addOrgMemberModal" class="modal override-modal">
+  <form class="formValidate" id="addOrgMemberForm">
+  <div class="modal-content">
+    <h4>Add Organization Member</h4>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="umember_name">Member Name *</label>
+          <input class="input-data" id="umember_name" name="member_name" type="text" data-error=".error-umember_name">
+          <div class="error-umember_name"></div>
+        </div>
+        <div class="input-field col s12">
+          <label for="caddress">Adress *</label>
+          <input class="input-data" id="caddress" name="address" type="text" data-error=".error-caddress">
+          <div class="error-caddress"></div>
+        </div>
+        <div class="col s4">
+          <label for="corganization_id">Organization *</label>
+          <select class="error browser-default input-data" id="corganization_id" name="organization_id" data-error=".error-corganization_id">
+            <option disabled selected>Choose organization</option>
+            <option value="1">Admin</option>
+            <option value="20">Member</option>
+          </select>
+          <div class="input-field">
+            <div class="error-corganization_id"></div>
+          </div>
+        </div>
+        <div class="col s4">
+          <label for="cposition">Position *</label>
+          <select class="error browser-default input-data" id="cposition" name="position" data-error=".error-cposition">
+            <option disabled selected>Choose position</option>
+            <option value="1">Admin</option>
+            <option value="20">Member</option>
+          </select>
+          <div class="input-field">
+            <div class="error-cposition"></div>
+          </div>
+        </div>
+        
+        <div class="col s4">
+          <label for="cgender">Gender *</label>
+          <select class="error browser-default input-data" id="cgender" name="gender" data-error=".error-cgender">
+            <option disabled selected>Choose Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <div class="input-field">
+            <div class="error-cgender"></div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button class="waves-effect waves-green btn-flat" type="reset">Reset</button>
+    <button class="waves-effect waves-green btn-flat" type="submit">Submit</button>
+  </div>
+  </form>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    const organization_list = {data_organization_list};
+    const position_list = {data_position_list};
+    const inputForm = $('#addOrgMemberForm');
+    const modalClass = $('#addOrgMemberModal.modal');
+    const modalInit = modalClass.modal({
+      dismissible: true,
+      onCloseEnd: function(){
+        inputForm.find('button[type="reset"]').click();
+      }
+    });
+    inputForm.validate({
+      rules: {
+        member_name: {
+            required: true,
+            minlength: 5
+        },
+        organization_id: {
+            required: true,
+        },
+        gender: {
+            required: true,
+        },
+        position: {
+            required: true,
+        },
+        address:{
+          required: true,
+          minlength: 5,
+        },
+      },
+      messages: {
+        member_name:{
+          required: "Enter a name",
+          minlength: "Enter at least 5 characters"
+        },
+        organization_id:{
+          required: "Select organization",
+          minlength: "Enter at least 5 characters"
+        },
+        gender:{
+          required: "Select gender",
+          minlength: "Enter at least 5 characters"
+        },
+        position:{
+          required: "Select position",
+          minlength: "Enter at least 5 characters"
+        },
+        address:{
+          required: "Re-type password",
+          minlength: "Enter at least 5 characters",
+        }
+      },
+      errorClass: "invalid",
+      errorPlacement: function(error, element) {
+        var placement = $(element).data('error');
+          if (placement) {
+            $(placement).html(error);
+          } else {
+            error.insertAfter(element);
+          }
+      },
+      submitHandler:  function(){
+        localData = async function (data){
+          const query = await request.post({url: '/api/admin/addOrgMember', body:data});
+          if(query && query.status){
+            toaster.success(query.message);
+            setTimeout(function(){
+              modalClass.modal('close');
+            }, 1500);
+          }else{
+            toaster.error(query.message);
+          }
+        }
+        const input = {};
+        inputForm.find('.input-data').each(function(){
+          const local = $(this);
+          const name = local.attr('name');
+          const value = local.val();
+          if(name){
+            if(name !== 'cpassword'){
+              input[name] = value;
+            } 
+          }
+        });
+        if(input && Object.keys(input).length){
+          localData(input);
+        }
+      }
+    })
+    const selectPositionOption = loadSelect(position_list, 'code:name', 'Choose Position');
+    const selectOrgOption = loadSelect(organization_list, 'code:name', 'Choose Organization');
+    $('select#cposition').html(selectPositionOption);
+    $('select#corganization_id').html(selectOrgOption);
+  })
+</script>

@@ -3,7 +3,7 @@
     <div id="basic-tabs" class="card card card-default scrollspy">
       <div class="card-content pt-5 pr-5 pb-5 pl-5">
         <h3 class="card-title table-header">Organization Member List <span>{data_addButton}</span></h3>
-        <table id="landholding-table" class="display"></table>
+        <table id="organization-member-table" class="display"></table>
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
     const cEdit = {data_edit};
     const tableData = {data_organization_member};
     const dataObject = {
-      table : $('#landholding-table'),
+      table : $('#organization-member-table'),
       config: {
         responsive: true,
         "paging": false,
@@ -62,8 +62,8 @@
       {data: 'position', title:'Position'}
     ]).setData(tableData).render();
     $('.table-header .btn-extra-add').on('click', function(){
-      $('#addOrgModal').modal('open');
+      $('#addOrgMemberModal').modal('open');
     })
   })
 </script>
-{data_addOrgModal}
+{data_addOrgMemberModal}

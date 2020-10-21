@@ -110,9 +110,9 @@
 						$response->message = "email already exist";
 					}else{
 						$input->password = $this->encrypt($input->password);
-						$input->user_role = $this->decrypt($input->user_role);
+						$input->user_role = $this->decrypt($input->role);
 						$input->branch_id = $this->decrypt($input->branch_id);
-						$input->query = "INSERT INTO user (username, password, name, email, user_role, branch_id) VALUES ('$input->username','$input->password','$input->name','$input->email','$input->role','$input->branch_id')";
+						$input->query = "INSERT INTO user (username, password, name, email, user_role, branch_id) VALUES ('$input->username','$input->password','$input->name','$input->email','$input->user_role','$input->branch_id')";
 						$query = $this->execQuery("insert",$input->query);
 						if($query->status){
 							$response->status = true;

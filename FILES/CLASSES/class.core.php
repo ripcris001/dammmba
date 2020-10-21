@@ -34,6 +34,7 @@ Class Core extends Themer implements settings, server_control {
 		$this->__data = new stdClass();
 		$this->__session = new stdClass();
 		$this->__session->noSessionMessage = "No Session";
+		$this->__session->web_title = settings::c_title;
 		$this->__session->change_gateway = (server_control::system_override ? server_control::server_gateway : $this->getServerSetting("gateway")) ? '<a class="btn-logout-gateway" href="#">Change Gateway</a>' : '';
 		$this->__theme = new stdClass();
 		$this->__theme_overide = new stdClass();
@@ -415,6 +416,11 @@ Class Core extends Themer implements settings, server_control {
 		print_r(json_encode($data));
 		exit(1);
 	}
+	public function queryParser($query, $value){
+		$output = "";
+        $output = empty($value) ? $output : str_replace(array_keys($value), array_values($value), $query);
+        return $output;
+	}
 	public function execQuery($type, $data, $all = false){
 		$output = $this->newClass();
 		$output->status = false;
@@ -438,7 +444,7 @@ Class Core extends Themer implements settings, server_control {
 			}else if($type == 'update'){
 				try {
 					$query = $this->DBase('prepare', $data);
-					if ($query->execute($all)) { 
+					if ($query->execute()) { 
 						$output->status = true;
 					} else {
 					 	$output->status = false;
@@ -449,16 +455,23 @@ Class Core extends Themer implements settings, server_control {
 			}else if($type == 'insert'){
 				try {
 					$query = $this->DBase('prepare', $data);
-					if ($query->execute($all)) { 
-						$output->status = true;
-					} 
+					// if($all){
+					// 	call_user_func_array(array($query, 'bind_param'), $all);
+					// 	if ($query->execute()) { 
+					// 		$output->status = true;
+					// 	} 
+					// }else{
+						if ($query->execute()) { 
+							$output->status = true;
+						} 
+					// }
 				} catch(PDOException $e){
 					$output->message = $e->getMessage();
 				}
 			}else if($type == 'delete'){
 				try {
 					$query = $this->DBase('prepare', $data);
-					if ($query->execute($all)) { 
+					if ($query->execute()) { 
 						$output->status = true;
 					}
 				} catch(PDOException $e){

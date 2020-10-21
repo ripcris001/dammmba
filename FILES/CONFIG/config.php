@@ -57,7 +57,7 @@ interface server_control {
 	const server_status = 0;
 	const server_maintenance = 0;
 	const server_lock = 0;
-	const server_gateway = 1;
+	const server_gateway = 0;
 	const server_themer = 0;
 	const server_chat = 0;
 }
