@@ -6,9 +6,9 @@ interface settings {
 	
 #DATABASE SETTINGS
 	const db_host = "localhost";
-	const db_user = "root";
+	const db_user = "dammmba_v2";
 	const db_port = 3306;
-	const db_pass = "";
+	const db_pass = "dammmba_v2";
 	const db_database = "dammmba_v2";
 
 #TEMPLATE SETTINGS

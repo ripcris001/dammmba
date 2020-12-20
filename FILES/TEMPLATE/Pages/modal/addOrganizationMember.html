@@ -126,6 +126,7 @@
             toaster.success(query.message);
             setTimeout(function(){
               modalClass.modal('close');
+              window.location.reload();
             }, 1500);
           }else{
             toaster.error(query.message);

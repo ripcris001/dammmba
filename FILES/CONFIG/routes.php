@@ -27,7 +27,8 @@
 		"landholding.php",
 		"organization.php",
 		"admin_dashboard.php",
-		"client_admin.php"
+		"client_admin.php",
+		"monthly_dues.php"
 	);
 	$local_routes = array();
 	$routeList = $loader->getRoute()->data;

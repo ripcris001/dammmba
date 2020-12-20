@@ -1,0 +1,7 @@
+Simple Query Builder - ripcris [Web Developer];
+
+select('table') - select single table;
+select(['field1','field2','field1'], 'table') - select custom field to display
+count('field1') = count specific field
+count(array("filed1","alies")) = assign alies when counting specific field with
+

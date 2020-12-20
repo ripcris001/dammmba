@@ -112,8 +112,8 @@
 						$input->password = $this->encrypt($input->password);
 						$input->user_role = $this->decrypt($input->role);
 						$input->branch_id = $this->decrypt($input->branch_id);
-						$input->query = "INSERT INTO user (username, password, name, email, user_role, branch_id) VALUES ('$input->username','$input->password','$input->name','$input->email','$input->user_role','$input->branch_id')";
-						$query = $this->execQuery("insert",$input->query);
+						$input->query = "INSERT INTO user (username, password, name, email, user_role, branch_id) VALUES (?,?,?,?,?,?)";
+						$query = $this->execQuery("insert", $input->query, array('ssssss', $input->username, $input->password, $input->name, $input->email, $input->user_role, $input->branch_id));
 						if($query->status){
 							$response->status = true;
 							$response->message = "Successfully added new user.";
