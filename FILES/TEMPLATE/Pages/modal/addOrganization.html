@@ -146,7 +146,7 @@
       errorPlacement: function(error, element) {
         var placement = $(element).data('error');
           if (placement) {
-            $(placement).append(error);
+            $(placement).html(error);
           } else {
             error.insertAfter(element);
           }
@@ -158,6 +158,7 @@
             toaster.success(query.message);
             setTimeout(function(){
               modalClass.modal('close');
+              window.location.reload();
             }, 1500);
           }else{
             toaster.error(query.message);
@@ -165,7 +166,7 @@
         }
         const input = {};
         inputForm.find('.input-data').each(function(){
-          const local = $(this);addOrgModal
+          const local = $(this);
           const name = local.attr('name');
           const value = local.val();
           if(name){

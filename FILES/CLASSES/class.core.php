@@ -1,11 +1,13 @@
 <?php
+include('class.builder.php');
 Class Core extends Themer implements settings, server_control {
-	public $__template, $__tConfig, $__data, $__session, $__theme_overide;
+	public $__template, $__tConfig, $__data, $__session, $__theme_overide, $builder;
 	private $encryption_key = "VjWt#9<\=m<uyq6zC=%Yb.&DBe5q^+T]f8k";
 	private $encryption_iv = "2zQfC2GEcQ*})gMg";
 	private $encryption_cipher = "AES-256-CBC";
 	public function __construct(){
 		$check = $this->checkSession();
+		$this->builder = new Builder();
 		$this->enable_admin = 0;
 		$this->__template = new stdClass();
 		$this->__template->cTitle = settings::c_title;
@@ -22,13 +24,19 @@ Class Core extends Themer implements settings, server_control {
 		$this->__template->cAssetsPLUGIN = $this->__template->cAssets.settings::t_plugin;
 		$this->__template->cPluginJS = "";
 		$this->__template->cPluginCSS = "";
+		$this->__template->cPluginCSSCustom = "";
+		$this->__template->cPluginJSCustom = "";
 		$this->__template->cContent = "Default Content";
 		$this->__template->cData = null;
 		$this->__template->cAllowTheme = server_control::system_override ? server_control::server_themer : $this->getServerSetting("themer");
 		$this->__template->cRoleButton = "";
+		$this->__asset = new stdClass();
+		$this->__asset->js = array();
+		$this->__asset->css = array();
 		$this->__plugin = new stdClass();
 		$this->__plugin->use = array();
 		$this->__plugin->blacklist = array();
+
 		$this->__tConfig = new stdClass();
 		$this->__tConfig->template = settings::t_main;
 		$this->__data = new stdClass();
@@ -167,6 +175,8 @@ Class Core extends Themer implements settings, server_control {
 		if(isset($this->__plugin->use)){
 			$this->plugin($this->__plugin->use, $this->__plugin->blacklist);
 		}
+		
+		$this->additionalAssets($this->__asset->css, $this->__asset->js);
 		$this->__theme = $this->buildTheme($theme_setting);
 		if(isset($this->__theme_overide)){	
 			foreach($this->__theme_overide as $key => $value){
@@ -421,6 +431,16 @@ Class Core extends Themer implements settings, server_control {
         $output = empty($value) ? $output : str_replace(array_keys($value), array_values($value), $query);
         return $output;
 	}
+	PUBLIC function refValues($arr){
+	    if (strnatcmp(phpversion(),'5.3') >= 0) //Reference is required for PHP 5.3+
+	    {
+	        $refs = array();
+	        foreach($arr as $key => $value)
+	            $refs[$key] = &$arr[$key];
+	        return $refs;
+	    }
+	    return $arr;
+	}
 	public function execQuery($type, $data, $all = false){
 		$output = $this->newClass();
 		$output->status = false;
@@ -454,17 +474,9 @@ Class Core extends Themer implements settings, server_control {
 				}
 			}else if($type == 'insert'){
 				try {
-					$query = $this->DBase('prepare', $data);
-					// if($all){
-					// 	call_user_func_array(array($query, 'bind_param'), $all);
-					// 	if ($query->execute()) { 
-					// 		$output->status = true;
-					// 	} 
-					// }else{
-						if ($query->execute()) { 
-							$output->status = true;
-						} 
-					// }
+					$query = $this->DBase('query', $data);
+					$output->status = true;
+					$output->data = json_encode($query);
 				} catch(PDOException $e){
 					$output->message = $e->getMessage();
 				}
@@ -533,6 +545,22 @@ Class Core extends Themer implements settings, server_control {
    	 	}
    	 	$this->__template->cPluginJS = $localJS;
    	 	$this->__template->cPluginCSS = $localCSS;
+ 	}
+ 	public function additionalAssets($css, $js){
+		$localCSS = "";
+		$localJS = "";
+		if(isset($css)){
+			foreach ($css as $key => $value) {
+	   	 			$localCSS = $localCSS.'<link rel="stylesheet" type="text/css" href="'.$this->__template->cAssets.'/'.$value.'">';		
+	   	 	}
+		}
+   	 	if(isset($js)){
+	   	 	foreach ($js as $key => $value) {
+	   	 		$localJS = $localJS.'<script src="'.$this->__template->cAssets.'/'.$value.'" type="text/javascript"></script>';
+	   	 	}
+   	 	}
+   	 	$this->__template->cPluginJSCustom = $localJS;
+   	 	$this->__template->cPluginCSSCustom = $localCSS;
  	}
  	public function qBuilder(){
  		$param = $this->newClass();

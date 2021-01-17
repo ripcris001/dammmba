@@ -16,16 +16,16 @@
 		$class = $value;
 		$class = str_replace('.php', '', $class);
 		$className = 'route_'.$class;
-		if($loader->checkFile("ROUTES/$value")){
-			include("ROUTES/$value");
-			$output->$className = new $class;
-		}else if($loader->checkFile("SYSTEM/ROUTES/$value")){
-			include("SYSTEM/ROUTES/$value");
-			$output->$className = new $class;
-		}else if($loader->checkFile("SYSTEM/ADMIN_ROUTES/$value")){
-			include("SYSTEM/ADMIN_ROUTES/$value");
-			$output->$className = new $class;
-		}else{
+		$localRoutePath = array('ROUTES','SYSTEM/ROUTES','SYSTEM/ADMIN_ROUTES','ROUTES/API','ROUTES/API/TABLE');
+		$match = 0;
+		foreach($localRoutePath as $rkeys => $rvalue){
+			if($loader->checkFile("$rvalue/$value")){
+				include("$rvalue/$value");
+				$output->$className = new $class;
+				$match++;
+			}
+		}
+		if(!$match){
 			$loader->SystemExit("File: [$value] doesnt exist on system. please remove this file to avoid error", "$root\CONFIG","routes.php");
 		}
 	}

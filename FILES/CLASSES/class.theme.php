@@ -224,9 +224,9 @@
 							array_push($assetList, $convert);
 							foreach ($b as $key => $value) {
 								if (!in_array($value, $blacklist)) {	
-									if(!is_dir("$handle1/$value")){
-										//print_r("$value \n");
-										$ext = pathinfo("$handle1/$value");
+									$dirl = "$handle1/$value";
+									if(!is_dir($dirl)){
+										$ext = pathinfo($dirl);
 										if($ext['extension'] == 'css'){
 											array_push($plugin->$convert->css, "/$file/$value");
 										}else if($ext['extension'] == 'js'){
@@ -235,12 +235,13 @@
 
 										}
 									}else{
-										$c = scandir("$handle1/$value");
+										$c = scandir($dirl);
 										foreach ($c as $key1 => $value1) {
 											if (!in_array($value1, $blacklist)) {
-												if(!is_dir("$handle1/$value/$value1")){
+												$dirl = "$dirl/$value1";
+												if(!is_dir($dirl)){
 													//print_r("$files/$value/$value1 \n");
-													$ext = pathinfo("$handle1/$value/$value1");
+													$ext = pathinfo($dirl);
 													if($ext['extension'] == 'css'){
 														array_push($plugin->$convert->css, "/$file/$value/$value1");
 													}else if($ext['extension'] == 'js'){
@@ -248,6 +249,8 @@
 													}else{
 
 													}
+												}else{
+													
 												}
 											}
 										}

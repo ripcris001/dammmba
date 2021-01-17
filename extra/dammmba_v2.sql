@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2020 at 10:59 AM
+-- Generation Time: Dec 20, 2020 at 06:17 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -69,7 +69,8 @@ INSERT INTO `landholdings` (`id`, `municipality`, `barangay`, `landholdings_name
 (3, 'Sagay', 'Poblacion 1', 'HDA. Claro Artalles', 'Gina Artalles', 'tn-00012', 'lt-10001', 352),
 (4, 'Sagay', 'Poblacion 1', 'HDA. Claro 2', 'Gina Artalles', 'tn-00013', 'lt-10003', 400),
 (5, 'Sagay', 'Brgy. 1', 'HDA Alleg', 'Dino Arroyo', 'tn-00112', 'lt-105220', 580),
-(6, 'Sagay', 'Poblacion 1', 'HDA Claro 3', 'Gina Artalles', 'tn-00014', 'lt-100065', 875);
+(6, 'Sagay', 'Poblacion 1', 'HDA Claro 3', 'Gina Artalles', 'tn-00014', 'lt-100065', 875),
+(7, 'Sagay', 'Poblacion 1', 'HDA. Claro 4', 'Gina Artalles', 'tn-000122', 'lt-10001', 352);
 
 -- --------------------------------------------------------
 
@@ -110,9 +111,19 @@ CREATE TABLE `monthly_dues` (
   `member_id` int(11) NOT NULL,
   `dues_record_id` int(11) NOT NULL,
   `amount` float NOT NULL,
-  `due_date` date NOT NULL,
+  `month` int(11) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
   `balance` float NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `monthly_dues`
+--
+
+INSERT INTO `monthly_dues` (`id`, `member_id`, `dues_record_id`, `amount`, `month`, `year`, `balance`) VALUES
+(1, 1, 2, 500, 11, 2020, 500),
+(2, 1, 1, 300, 10, 2020, 300),
+(3, 2, 1, 500, 10, 2020, 500);
 
 -- --------------------------------------------------------
 
@@ -132,7 +143,8 @@ CREATE TABLE `monthly_dues_record` (
 --
 
 INSERT INTO `monthly_dues_record` (`id`, `month`, `year`, `date_added`) VALUES
-(1, 10, 2020, '2020-10-11 00:28:33');
+(1, 10, 2020, '2020-10-11 00:28:33'),
+(2, 11, 2020, '2020-12-12 23:38:37');
 
 -- --------------------------------------------------------
 
@@ -160,10 +172,7 @@ CREATE TABLE `organization` (
 --
 
 INSERT INTO `organization` (`id`, `landholdings_id`, `organization_name`, `acroname`, `municipality`, `address`, `registration_number`, `registration_agency`, `date_registered`, `accridited_number`, `date_accridited`, `for_registration`) VALUES
-(1, 1, 'Pro Active Farmer', 'PAR', 'Bacolod', 'blk 3 lot 1 San Mateo', 'rn-000001', 'DAR', '2020-09-17', 'accn-000001', '2020-09-17', 0),
-(2, 3, 'Galapan Farmer Group', 'GFG', 'Bago', 'Brgy Mabalok', 'rn-001244', 'Department of Agreculture', '1997-07-07', '', '0000-00-00', 0),
-(3, 3, 'Gapan Fisherman Assoc', 'GFA', 'Sagay', 'Brgy Mabalok', 'rts-092223', 'BFAR', '2018-06-13', '', '0000-00-00', 0),
-(4, 6, 'Himalay Farmer Assoc', 'HIFAS', 'Cadiz', 'Bgry Malaya', 'gg-swen1234', 'DENR', '2020-07-30', '', '0000-00-00', 0);
+(5, 3, 'Galapan Farmer Group', 'GFG', 'Sagay', 'Brgy Mabalok', 'gg-swen1234', 'DENR', '2020-12-07', 'rts-092223', '2020-12-14', 0);
 
 -- --------------------------------------------------------
 
@@ -178,6 +187,7 @@ CREATE TABLE `organization_member` (
   `gender` char(20) DEFAULT NULL,
   `position` int(11) NOT NULL DEFAULT 0,
   `membership_fee` float DEFAULT NULL,
+  `monthly_due_fee` float DEFAULT NULL,
   `address` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -185,8 +195,9 @@ CREATE TABLE `organization_member` (
 -- Dumping data for table `organization_member`
 --
 
-INSERT INTO `organization_member` (`id`, `organization_id`, `member_name`, `gender`, `position`, `membership_fee`, `address`) VALUES
-(1, 1, 'Janet Lim', 'Female', 1, 500, 'block 2 lot 8 ,Brgy Bagol');
+INSERT INTO `organization_member` (`id`, `organization_id`, `member_name`, `gender`, `position`, `membership_fee`, `monthly_due_fee`, `address`) VALUES
+(1, 5, 'Janin Artiz', 'Male', 1, 150, 300, 'Brgy Mabalok'),
+(2, 5, 'Jerry Lin', 'Male', 20, 150, 500, 'Brgy Mabalok');
 
 -- --------------------------------------------------------
 
@@ -276,14 +287,19 @@ INSERT INTO `routes` (`route_id`, `route`, `file_name`, `function`, `maintenance
 (13, '/developer/helper/user', 'admin_dashboard', '_user', 0, 1, 0, 1, '1', NULL, NULL, NULL, NULL),
 (14, '/developer/helper/routes', 'admin_dashboard', '_routes', 0, 1, 0, 1, '1', NULL, NULL, NULL, NULL),
 (15, '/organization', 'organization', '_init', 0, 0, 0, 0, NULL, NULL, '1', '1', '1'),
-(16, '/admin/user', 'client_admin', '_user', 0, 1, 0, 0, '1', NULL, NULL, '1', '1'),
+(16, '/admin/user', 'client_admin', '_user', 0, 1, 0, 1, '1', NULL, NULL, '1', '1'),
 (17, '/api/admin/getUser', 'client_admin', '_api_get_user', 0, 0, 1, 1, '1', NULL, NULL, NULL, NULL),
 (18, '/api/admin/addUser', 'client_admin', '_api_add_user', 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL),
 (19, '/api/landholding/addlh', 'landholding', '_api_add_lh', 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL),
 (20, '/api/organization/addOrg', 'organization', '_api_add_org', 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL),
 (21, '/api/admin/deleteUser', 'client_admin', '_api_delete_user', 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL),
 (22, '/organization/member', 'organization', '_member', 0, 0, 0, 0, NULL, NULL, NULL, '1', NULL),
-(23, '/api/monthly_dues', 'client_admin', '_test', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL);
+(23, '/api/monthly_dues', 'client_admin', '_test', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
+(24, '/api/admin/addOrgMember', 'organization', '_api_add_member', 0, 0, 1, 0, NULL, NULL, NULL, NULL, NULL),
+(25, '/api/organization/get', 'table_organization', '_get', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
+(26, '/test/query', 'client', '_qbuilder', 0, 0, 0, 0, NULL, '1', NULL, NULL, NULL),
+(27, '/test/querybuilder', 'client', '_qbuilderDisplay', 0, 0, 0, 0, NULL, '1', NULL, NULL, NULL),
+(28, '/organization/monthly_dues/generate', 'monthly_dues', '_generate', 0, 0, 0, 0, NULL, '1', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -339,13 +355,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `name`, `email`, `profile_picture`, `profile_banner`, `user_role`, `status`, `last_login`, `secret_question`, `secret_answer`, `branch_id`, `theme_id`, `template_setting`, `template_enable`, `date_created`) VALUES
-(1, 'ripcris', 'LxeIEcqKRRwsENP6Av3t9A==', 'Vladimir Bargayo', 'ripcris10@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, 'menu_selection:normal,menu_collapsed:0,menu_color:gradient-green-teal,footer_color:gradient-green-teal,navebar_color:gradient-green-teal,sidebar_mode:sidenav-dark', 1, '2020-10-11 00:29:50'),
-(2, 'member', 'LxeIEcqKRRwsENP6Av3t9A==', 'Karen Bukon', 'member@webdeveloper.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 20, 0, NULL, '', '', 2, 0, '', 0, '2020-10-11 00:29:50'),
-(5, 'admin', 'LxeIEcqKRRwsENP6Av3t9A==', 'Super Admin', 'Admin@webdeveloper.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, '2020-10-06 00:00:00', '', '', 1, 0, '', 0, '2020-10-11 00:29:50'),
-(6, 'admin1', 'LxeIEcqKRRwsENP6Av3t9A==', 'Admin Vladimir', 'admin1@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, '', 0, '2020-10-11 00:29:50'),
-(7, 'admin2', 'LxeIEcqKRRwsENP6Av3t9A==', 'Admin Vladimir', 'admin2@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, '', 0, '2020-10-11 00:29:50'),
-(8, 'admin3', 'LxeIEcqKRRwsENP6Av3t9A==', 'Admin Vladimir', 'admin3@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, '', 0, '2020-10-11 00:29:50'),
-(9, 'admin4', 'LxeIEcqKRRwsENP6Av3t9A==', 'Admin Vladimir', 'admin4@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, '', 0, '2020-10-11 00:29:50');
+(1, 'ripcris', 'LxeIEcqKRRwsENP6Av3t9A==', 'Vladimir Bargayo', 'ripcris10@gmail.com', '/app-assets/images/biohazard--v1.png', '/app-assets/images/gallery/profile-bg.png', 1, 0, NULL, '', '', 1, 0, 'menu_selection:normal,menu_collapsed:0,menu_color:gradient-green-teal,footer_color:gradient-green-teal,navebar_color:gradient-green-teal,sidebar_mode:sidenav-dark', 1, '2020-10-11 00:29:50');
 
 -- --------------------------------------------------------
 
@@ -384,7 +394,8 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`role_id`, `role_name`) VALUES
 (1, 'Admin'),
-(20, 'Member');
+(20, 'Member'),
+(21, 'Manila Admin');
 
 --
 -- Indexes for dumped tables
@@ -504,7 +515,7 @@ ALTER TABLE `branch`
 -- AUTO_INCREMENT for table `landholdings`
 --
 ALTER TABLE `landholdings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `landholding_crops`
@@ -522,25 +533,25 @@ ALTER TABLE `login_history`
 -- AUTO_INCREMENT for table `monthly_dues`
 --
 ALTER TABLE `monthly_dues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `monthly_dues_record`
 --
 ALTER TABLE `monthly_dues_record`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `organization`
 --
 ALTER TABLE `organization`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `organization_member`
 --
 ALTER TABLE `organization_member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `organization_member_position`
@@ -564,13 +575,13 @@ ALTER TABLE `redirect`
 -- AUTO_INCREMENT for table `routes`
 --
 ALTER TABLE `routes`
-  MODIFY `route_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `route_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user_gateway`
@@ -582,7 +593,7 @@ ALTER TABLE `user_gateway`
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
@@ -598,8 +609,8 @@ ALTER TABLE `landholding_crops`
 -- Constraints for table `monthly_dues`
 --
 ALTER TABLE `monthly_dues`
-  ADD CONSTRAINT `monthly_dues_ibfk_1` FOREIGN KEY (`id`) REFERENCES `organization_member` (`id`),
-  ADD CONSTRAINT `monthly_dues_ibfk_2` FOREIGN KEY (`dues_record_id`) REFERENCES `monthly_dues_record` (`id`);
+  ADD CONSTRAINT `monthly_dues_ibfk_2` FOREIGN KEY (`dues_record_id`) REFERENCES `monthly_dues_record` (`id`),
+  ADD CONSTRAINT `monthly_dues_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `organization_member` (`id`);
 
 --
 -- Constraints for table `organization`

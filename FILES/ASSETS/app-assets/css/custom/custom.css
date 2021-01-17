@@ -28,3 +28,23 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 	max-height: 95% !important;
 	top: 3% !important;
 }
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter
+{
+    display: block;
+}
+.dataTables_wrapper .dataTables_length label select,
+.dataTables_wrapper .dataTables_filter label select
+{
+    display: inline-block;
+
+    width: auto;
+    height: auto;
+}
+.dataTables_wrapper .dataTables_length label input,
+.dataTables_wrapper .dataTables_filter label input
+{
+    width: auto; 
+    height: auto;
+}

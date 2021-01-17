@@ -11,6 +11,7 @@ class Connection extends mysqli implements settings {
         $this->MySQL->TotalQuery = 0;
         $this->MySQL->Configurations = null;
 		$this->MySQL->Error = null;
+        $this->MySQL->Con = null;
 	}
 	
 	public function connectDB() {
@@ -26,6 +27,7 @@ class Connection extends mysqli implements settings {
     }
 	
 	public function DBase($type, $params) {
+        $output = new stdClass(); 
         if (!$this->MySQL->Connection)
         $this->SystemExit('No available MySQLi connection', __LINE__, __FILE__);
         

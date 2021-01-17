@@ -57,8 +57,8 @@
 				if($this->execQuery("fetch",$input->query)->status){
 					$response->message = "Landholding already exist";
 				}else{
-					$input->query = "INSERT INTO landholdings (municipality, barangay, landholdings_name, landowner_name, title_number, lot_number, lot_area) VALUES ('$input->municipality','$input->barangay','$input->landholdings_name','$input->landowner_name','$input->title_number','$input->lot_number','$input->lot_area')";
-					$query = $this->execQuery("insert",$input->query);
+					$input->query = "INSERT INTO landholdings (municipality, barangay, landholdings_name, landowner_name, title_number, lot_number, lot_area) VALUES (?,?,?,?,?,?,?)";
+					$query = $this->execQuery("insert", $input->query, array('sssssss', $input->municipality, $input->barangay, $input->landholdings_name, $input->landowner_name, $input->title_number, $input->lot_number, $input->lot_area));
 					if($query->status){
 						$response->status = true;
 						$response->message = "Successfully added new landholding.";

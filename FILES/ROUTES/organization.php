@@ -156,23 +156,28 @@
 			$response = $this->newClass();
 			$response->status = false;
 			$response->message = "";
+			$squery = array();
 			$input = $this->newClass();
 			if(isset($param->body)){
 				foreach ($param->body as $key => $value) {
 					$input->$key = $value;
+					$squery[$key] = $value;
 				}
 				$input->landholdings_id = $this->decrypt($input->landholdings_id);
-				$input->query = "SELECT * FROM organization WHERE organization_name = '$input->organization_name'";
+				$squery['landholdings_id'] = $this->decrypt($squery['landholdings_id']);
+				$input->query = $this->builder->select('organization')->where(
+					[["organization_name", "=", "$input->organization_name"]]
+				)->string();
 				if($this->execQuery("fetch",$input->query)->status){
 					$response->message = "Organization already exist";
 				}else{
-					$input->query = "INSERT INTO organization (landholdings_id, organization_name, acroname, municipality, address, registration_number, registration_agency, date_registered, accridited_number, date_accridited, for_registration) VALUES ('$input->landholdings_id','$input->organization_name','$input->acroname','$input->municipality','$input->address','$input->registration_number','$input->registration_agency','$input->date_registered','$input->accridited_number','$input->date_accridited','$input->for_registration')";
-					$query = $this->execQuery("insert",$input->query);
-					if($query->status){
+					$input->squery = $this->builder->insert('organization', $squery)->string();
+					$aquery = $this->execQuery("insert", $input->squery, true);
+					if($aquery->status){
 						$response->status = true;
-						$response->message = "Successfully added new landholding.";
+						$response->message = "Successfully added new organization.";
 					}else{
-						$response->message = "Failed to add new landholding.";
+						$response->message = "Failed to add new organization.";
 					}
 				}
 			}else{
@@ -185,16 +190,18 @@
 			$response->status = false;
 			$response->message = "";
 			$input = $this->newClass();
+			$squery = array();
 			if(isset($param->body)){
 				foreach ($param->body as $key => $value) {
 					$input->$key = $value;
+					$squery[$key] = $value;
 				}
 				$input->position = $this->decrypt($input->position);
-				$input->organization_id = $this->decrypt($input->organization_id);				
-				// $input->query = "INSERT INTO organization (landholdings_id, organization_name, acroname, municipality, address, registration_number, registration_agency, date_registered, accridited_number, date_accridited, for_registration) VALUES ('$input->landholdings_id','$input->organization_name','$input->acroname','$input->municipality','$input->address','$input->registration_number','$input->registration_agency','$input->date_registered','$input->accridited_number','$input->date_accridited','$input->for_registration')";
-
-				$input->query = "INSERT INTO organization_member (organization_id, member_name, gender, position, address) VALUES ('?','?','?','?','?')";
-				$query = $this->execQuery("insert", $input->query, array('issis', $input->organization_id, $input->member_name, $input->gender, $input->position, $input->address));
+				$input->organization_id = $this->decrypt($input->organization_id);	
+				$squery['position'] = $this->decrypt($squery['position']);
+				$squery['organization_id'] = $this->decrypt($squery['organization_id']);			
+				$input->query = $this->builder->insert('organization_member', $squery)->string();
+				$query = $this->execQuery("insert", $input->query, true);
 				if($query->status){
 					$response->status = true;
 					$response->message = "Successfully added new landholding.";
